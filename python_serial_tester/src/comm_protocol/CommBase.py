@@ -1,4 +1,5 @@
 
+import zlib
 
 class CommBase:
 
@@ -10,14 +11,14 @@ class CommBase:
 
 
     def __str__(self):
-        raise NotImplementedError("__str__() function must be implemented by subclass.")
+        raise NotImplementedError
 
-
-    def __repr__(self):
-        raise NotImplementedError("__repr__() function must be implemented by subclass.")
+    
+    def __str_stub(self):
+        raise NotImplementedError
 
     
     @property
-    def crc(self, string):
-        raise NotImplementedError("crc() function must be implemented by subclass.")
+    def crc(self):
+        raise NotImplementedError
 

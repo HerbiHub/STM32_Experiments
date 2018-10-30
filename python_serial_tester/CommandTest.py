@@ -7,6 +7,7 @@ from src.comm_protocol import Status, Parser
 x = Parser("1,YOUa,MEME,STATUS,045,0x12345678,0xf70da055\n").iparse()
 
 print(x)
+print(type(x))
 
 
 

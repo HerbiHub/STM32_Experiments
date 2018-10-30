@@ -15,14 +15,17 @@ class Status(CommBase):
 
 
     def __str__(self):
-        return f"{self.__str_stub()},{self.crc}\n"
+        if self._crc:
+            return f"{self.__str_stub()},{self._crc}"
+        else:
+            return f"{self.__str_stub()},{self.crc}"
 
     
     def __str_stub(self):
         return f"{self.version},{self.destination},{self.source},STATUS,{self.status_code:0>3},{self.crc_old}"
 
-
-    @property 
+    
+    @property
     def crc(self):
         return hex(zlib.crc32(self.__str_stub().encode('ASCII')) & 0xFFFFFFFF)
 
