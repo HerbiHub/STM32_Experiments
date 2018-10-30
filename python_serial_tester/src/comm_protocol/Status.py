@@ -11,7 +11,7 @@ class Status(CommBase):
 
         super().__init__(*args, **kwargs) 
         self.status_code = kwargs.get('status_code',200)
-        self.old_crc = kwargs.get('old_crc',0)
+        self.crc_old = kwargs.get('crc_old',0)
 
 
     def __str__(self):
@@ -19,7 +19,7 @@ class Status(CommBase):
 
     
     def __str_stub(self):
-        return f"{self.version},{self.destination},{self.source},STATUS,{self.status_code:03},{self.old_crc}"
+        return f"{self.version},{self.destination},{self.source},STATUS,{self.status_code:0>3},{self.crc_old}"
 
 
     @property 

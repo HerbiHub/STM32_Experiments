@@ -6,6 +6,7 @@ class CommBase:
         self.version = kwargs.get('version', 1)
         self.source = kwargs.get('source','0000')
         self.destination = kwargs.get('destination','0000')
+        self._crc = kwargs.get('crc',None)
 
 
     def __str__(self):

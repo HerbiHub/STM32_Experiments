@@ -2,7 +2,12 @@
 
 import src.comm_protocol.Status as Status
 
+from src.comm_protocol import Status, Parser
 
-x = Status(destination="YOUa", source="MEME", old_crc = "0x12345678", status_code = 45)
-print(x,end="")
+x = Parser("1,YOUa,MEME,STATUS,045,0x12345678,0xf70da055\n").iparse()
+
+print(x)
+
+
+
 
