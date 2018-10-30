@@ -1,4 +1,5 @@
 
+import zlib
 
 from . import CommBase
 
@@ -12,5 +13,17 @@ class Status(CommBase):
         self.status_code = kwargs.get('status_code',200)
         self.old_crc = kwargs.get('old_crc',0)
 
+
     def __str__(self):
-        return f"{self.version},{self.destination},{self.source},STATUS,{self.status_code:03},{self.old_crc},{self.crc}\n"
+        return f"{self.__str_stub()},{self.crc}\n"
+
+    
+    def __str_stub(self):
+        return f"{self.version},{self.destination},{self.source},STATUS,{self.status_code:03},{self.old_crc}"
+
+
+    @property 
+    def crc(self):
+        return hex(zlib.crc32(self.__str_stub().encode('ASCII')) & 0xFFFFFFFF)
+
+

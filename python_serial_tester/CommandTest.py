@@ -3,5 +3,6 @@
 import src.comm_protocol.Status as Status
 
 
-x = Status()
-print(x)
+x = Status(destination="YOUa", source="MEME", old_crc = "0x12345678", status_code = 45)
+print(x,end="")
+
