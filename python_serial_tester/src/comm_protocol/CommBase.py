@@ -31,6 +31,7 @@ class CommBase(abc.ABC):
         """Sublcasses will produce a sub string for use in other class methods.
         """
 
+
     @abc.abstractmethod
     def validate(self):
         """Validate all current values, raise Value/Type errors when they are detected.
