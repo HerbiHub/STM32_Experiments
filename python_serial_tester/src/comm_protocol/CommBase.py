@@ -53,5 +53,9 @@ class CommBase(abc.ABC):
         if len(self.source) != 4:
             raise ValueError(f"Invalid length of source: {len(self.source)}")
 
+        if self._crc is not None:
+            if self._crc != self.crc:
+                raise ValueError(f"Invalid manual CRC: {self._crc} is not {self.crc}")
+
 
 

@@ -29,7 +29,3 @@ class Status(CommBase):
         if self.status_code not in [100,200,400,401,402,404,405,418,429,500]:
             raise ValueError(f"Invalid status code: {self.status_code}")
 
-        if self._crc is not None:
-            if self._crc != self.crc:
-                raise ValueError(f"Invalid manual CRC: {self._crc} is not {self.crc}")
-
