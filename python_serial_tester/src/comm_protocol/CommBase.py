@@ -1,7 +1,9 @@
 
+
+import abc
 import zlib
 
-class CommBase:
+class CommBase(abc.ABC):
 
     def __init__(self, *args, **kwargs):
         self.version = kwargs.get('version', 1)
@@ -11,14 +13,17 @@ class CommBase:
 
 
     def __str__(self):
-        raise NotImplementedError
+        if self._crc:
+            return f"{self.str_stub()},{self._crc}"
+        else:
+            return f"{self.str_stub()},{self.crc}"
 
-    
-    def __str_stub(self):
-        raise NotImplementedError
-
+    @abc.abstractmethod
+    def str_stub(self):
+        """Sublcasses will produce a sub string for use in other class methods.
+        """
     
     @property
     def crc(self):
-        raise NotImplementedError
+        return hex(zlib.crc32(self.str_stub().encode('ASCII')) & 0xFFFFFFFF)
 

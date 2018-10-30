@@ -13,20 +13,10 @@ class Status(CommBase):
         self.status_code = kwargs.get('status_code',200)
         self.crc_old = kwargs.get('crc_old',0)
 
-
-    def __str__(self):
-        if self._crc:
-            return f"{self.__str_stub()},{self._crc}"
-        else:
-            return f"{self.__str_stub()},{self.crc}"
-
     
-    def __str_stub(self):
+    def str_stub(self):
         return f"{self.version},{self.destination},{self.source},STATUS,{self.status_code:0>3},{self.crc_old}"
 
     
-    @property
-    def crc(self):
-        return hex(zlib.crc32(self.__str_stub().encode('ASCII')) & 0xFFFFFFFF)
 
 
