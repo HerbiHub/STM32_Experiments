@@ -28,7 +28,6 @@ class Parser:
             re.X)
         if regex_object:
             d = regex_object.groupdict()
-            print(d)
             return Status(version = d['version'],
                           destination = d['destination'],
                           source = d['source'],
@@ -51,7 +50,6 @@ class Parser:
             re.X)
         if regex_object:
             d = regex_object.groupdict()
-            print(d)
             return Baud(version = d['version'],
                           destination = d['destination'],
                           source = d['source'],

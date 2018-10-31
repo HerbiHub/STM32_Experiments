@@ -30,7 +30,7 @@ class Baud(CommBase):
     def validate(self):
         super().validate()
         # TODO: Finish validating status code and CRC values
-
+        
         standard_baud_rates = [110, 300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400, 57600, 115200, 128000, 256000]
 
         if self.verb == "SET":
