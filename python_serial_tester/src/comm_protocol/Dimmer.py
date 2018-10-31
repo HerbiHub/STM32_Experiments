@@ -8,7 +8,10 @@ class Dimmer(CommBase):
     
 
     def __init__(self, *args, **kwargs):
-        # 1,<DEST>,<SOURCE>,DIMMER,<VERB>,<CHANNEL>,<SETTING>,<CRC>\n
+        # 1,<DEST>,<SOURCE>,DIMMER,CLEAR,<CHANNEL>,<CRC>\n
+        # 1,<DEST>,<SOURCE>,DIMMER,GET,<CHANNEL>,<CRC>\n
+        # 1,<DEST>,<SOURCE>,DIMMER,SAY,<CHANNEL>,<SETTING>,<CRC>\n
+        # 1,<DEST>,<SOURCE>,DIMMER,SET,<CHANNEL>,<SETTING>,<CRC>\n
 
         super().__init__(*args, **kwargs) 
         self.verb = kwargs.get('verb')
@@ -18,10 +21,11 @@ class Dimmer(CommBase):
     
     def str_stub(self):
         ret_str = f"{self.version},{self.destination},{self.source},DIMMER,{self.verb},"
-        if self.verb == 'SAY':
+        if self.verb == 'CLEAR':
+            pass
+        elif self.verb == 'GET':
         elif self.verb == 'SAY':
-        elif self.verb == 'SAY':
-        elif self.verb == 'SAY':
+        elif self.verb == 'SET':
 
 
     def validate(self):

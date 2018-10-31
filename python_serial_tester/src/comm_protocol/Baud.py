@@ -8,7 +8,6 @@ class Baud(CommBase):
     
 
     def __init__(self, *args, **kwargs):
-        # 1,<DEST>,<SOURCE>,STATUS,<STATUS_CODE>,<CRC_OLD>,<CRC>\n
         # 1,<DEST>,<SOURCE>,BAUD,SET,<BAUD>,<CRC>\n
         # 1,<DEST>,<SOURCE>,BAUD,GET,<CRC>\n
         # 1,<DEST>,<SOURCE>,BAUD,SAY,<BAUD>,<CRC>\n
