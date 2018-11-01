@@ -10,7 +10,6 @@ from comm_protocol import Status, Baud, Parser
 
 class TestBaudCommand(unittest.TestCase):
 
-
     def test_parsing_baud(self):
         Parser("1,SLAV,HOST,BAUD,GET,0xbd05806e\n").iparse()
         Parser("1,SLAV,HOST,BAUD,SET,9600,0xf2434f96\n").iparse()
@@ -54,8 +53,9 @@ class TestBaudCommand(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Invalid argument") as cm:
             x.validate()
 
-class TestDimmerCommand(unittest.TestCase):
 
+
+class TestDimmerCommand(unittest.TestCase):
 
     def test_parsing_dimmer(self):
         Parser("1,SLAV,HOST,DIMMER,GET,0xbd05806e\n").iparse()
@@ -99,6 +99,7 @@ class TestDimmerCommand(unittest.TestCase):
         x = Parser("1,SLAV,HOST,DIMMER,CLEAR,12345,0xae740462\n").iparse()
         with self.assertRaisesRegex(ValueError,"Invalid channel range") as cm:
             x.validate()
+
 
 
 class TestStatusCommand(unittest.TestCase):
