@@ -15,26 +15,57 @@ class Dimmer(CommBase):
 
         super().__init__(*args, **kwargs) 
         self.verb = kwargs.get('verb')
-        self.channel = kwargs.get('channel')
-        self.setting = kwargs.get('setting')
+
+        try:
+            self.channel = int(kwargs.get('channel'))
+        except TypeError:
+            self.channel = None
+
+        try:
+            self.setting = int(kwargs.get('setting'))
+        except TypeError:
+            self.setting = None
 
     
     def str_stub(self):
-        ret_str = f"{self.version},{self.destination},{self.source},DIMMER,{self.verb},"
+        ret_str = f"{self.version},{self.destination},{self.source},DIMMER,{self.verb}"
         if self.verb == 'CLEAR':
             pass
         elif self.verb == 'GET':
+            pass
         elif self.verb == 'SAY':
+            ret_str += f",{self.channel},{self.setting}"
         elif self.verb == 'SET':
+            ret_str += f",{self.channel},{self.setting}"
+        return ret_str
 
 
     def validate(self):
         super().validate()
         # TODO: Finish validating status code and CRC values
 
-        if self.status_code < 100 or self.status_code >= 600:
-            raise ValueError(f"Invalid range of status code: {self.status_code}")
+        if self.channel != None:
+            if self.channel < 0 or self.channel > 16:
+                raise ValueError(f"Invalid channel range: {self.channel}")
 
-        if self.status_code not in [100,200,400,401,402,404,405,418,429,500]:
-            raise ValueError(f"Invalid status code: {self.status_code}")
+        if self.setting != None:
+            if self.setting < 0 or self.setting > 255:
+                raise ValueError(f"Invalid setting range: {self.setting}")
 
+
+        if self.verb == 'CLEAR':
+            if self.setting is not None:
+                raise ValueError(f"Invalid setting {self.setting} for verb CLEAR")
+        elif self.verb == 'GET':
+            if self.setting is not None:
+                raise ValueError(f"Invalid setting {self.setting} for verb GET")
+        elif self.verb == 'SAY':
+            if self.setting is None:
+                raise ValueError(f"Invalid setting {self.setting} for verb SAY")
+            if self.channel is None:
+                raise ValueError(f"Invalid channel {self.channel} for verb SAY")
+        elif self.verb == 'SET':
+            if self.setting is None:
+                raise ValueError(f"Invalid setting {self.setting} for verb SET")
+            if self.channel is None:
+                raise ValueError(f"Invalid channel {self.channel} for verb SET")
