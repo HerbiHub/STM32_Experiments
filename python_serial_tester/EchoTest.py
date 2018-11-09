@@ -12,7 +12,7 @@ from serial import rs485
 # 	bytesize=serial.EIGHTBITS,
 # 	# parity = serial.PARITY_EVEN,
 # 	stopbits = serial.STOPBITS_ONE)
-ser = serial.Serial('/dev/ttyUSB0', 230400, timeout=0,
+ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0,
                     parity='N', stopbits=2)
 # ser.rs485_mode=serial.rs485.RS485Settings()
 ser.write(b'hello')
