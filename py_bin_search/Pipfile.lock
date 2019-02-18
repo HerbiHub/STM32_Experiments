@@ -1,0 +1,42 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "a1e5c747439b70c5f789164ab97f3d948e8b15f96976da4714f8349098c0af94"
+        },
+        "host-environment-markers": {
+            "implementation_name": "cpython",
+            "implementation_version": "3.7.0",
+            "os_name": "posix",
+            "platform_machine": "x86_64",
+            "platform_python_implementation": "CPython",
+            "platform_release": "4.9.0-5-amd64",
+            "platform_system": "Linux",
+            "platform_version": "#1 SMP Debian 4.9.65-3+deb9u2 (2018-01-04)",
+            "python_full_version": "3.7.0",
+            "python_version": "3.7",
+            "sys_platform": "linux"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "3.7"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "numpy": {
+            "hashes": [],
+            "version": "==1.15.4"
+        },
+        "pyserial": {
+            "hashes": [],
+            "version": "==3.4"
+        }
+    },
+    "develop": {}
+}
