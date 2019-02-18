@@ -1,0 +1,68 @@
+Configuration	project
+STM32CubeMX 	5.0.1
+Date	02/17/2019
+MCU	STM32F030R8Tx
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+RTC	Activate RTC Clock Source	RTC_VS_RTC_Activate	VP_RTC_VS_RTC_Activate
+SYS	Serial_Wire	SYS_SWCLK	PA14
+SYS	Serial_Wire	SYS_SWDIO	PA13
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+USART1	Asynchronous	USART1_RX	PA10
+USART1	Asynchronous	USART1_TX	PA9
+USART1	Hardware Flow Control (RS485)	USART1_DE	PA12
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+42	PA9	USART1_TX	
+43	PA10	USART1_RX	
+45	PA12	USART1_DE	
+46	PA13	SYS_SWDIO	
+49	PA14	SYS_SWCLK	
+PERIPHERALS	MODES	FUNCTIONS	PINS
+RTC	Activate RTC Clock Source	RTC_VS_RTC_Activate	VP_RTC_VS_RTC_Activate
+SYS	Serial_Wire	SYS_SWCLK	PA14
+SYS	Serial_Wire	SYS_SWDIO	PA13
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+USART1	Asynchronous	USART1_RX	PA10
+USART1	Asynchronous	USART1_TX	PA9
+USART1	Hardware Flow Control (RS485)	USART1_DE	PA12
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+42	PA9	USART1_TX	
+43	PA10	USART1_RX	
+45	PA12	USART1_DE	
+46	PA13	SYS_SWDIO	
+49	PA14	SYS_SWCLK	
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : project
+Project Folder : /home/jmurray/Git/STM32_Experiments/project
+Toolchain / IDE : Makefile
+Firmware Package Name and Version : STM32Cube FW_F0 V1.9.0
+
+
+Code Generation Settings : 
+STM32Cube Firmware Library Package : Copy all used libraries into the project folder
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : No
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : No
+
+
+Toolchains Settings : 
+Compiler Optimizations : 
+
+
+
+
+
