@@ -38,6 +38,7 @@
 #include "stm32f0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "printf.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -72,10 +73,9 @@
 
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_usart1_rx;
-extern DMA_HandleTypeDef hdma_usart1_tx;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
-
+extern uint8_t dma_rx_buffer[dma_rx_buffer_SIZE];
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -145,7 +145,6 @@ void SysTick_Handler(void)
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
-
   /* USER CODE END SysTick_IRQn 1 */
 }
 
@@ -162,11 +161,14 @@ void SysTick_Handler(void)
 void DMA1_Channel2_3_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Channel2_3_IRQn 0 */
+  // HAL_GPIO_WritePin(GPIOA, JOHN_GREEN_Pin, 1);
+
+  // if(__HAL_UART_GET_FLAG)
 
   /* USER CODE END DMA1_Channel2_3_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_usart1_tx);
   HAL_DMA_IRQHandler(&hdma_usart1_rx);
   /* USER CODE BEGIN DMA1_Channel2_3_IRQn 1 */
+  // HAL_GPIO_WritePin(GPIOA, JOHN_GREEN_Pin, 0);
 
   /* USER CODE END DMA1_Channel2_3_IRQn 1 */
 }
@@ -177,11 +179,30 @@ void DMA1_Channel2_3_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
+  static int buff_ptr = 0;
+  static int old_ptr = 0;
+
+
+  if(dma_rx_buffer[buff_ptr] == '\n')
+  {
+    do
+    {
+      //HAL_UART_Transmit(&huart1, (uint8_t *)&dma_rx_buffer[old_ptr], 1, 0xFFFF);
+      printf("%c",dma_rx_buffer[old_ptr]);
+      old_ptr = (old_ptr + 1) % dma_rx_buffer_SIZE;
+    }  while(old_ptr != buff_ptr);
+    printf("\n");
+    printf("%x\n",huart1.RxXferCount);
+  }
+
+  buff_ptr = (buff_ptr + 1) % dma_rx_buffer_SIZE;
+
+  // printf("FIN\n");
 
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
-
+  HAL_GPIO_WritePin(GPIOA, JOHN_GREEN_Pin, 0);
   /* USER CODE END USART1_IRQn 1 */
 }
 

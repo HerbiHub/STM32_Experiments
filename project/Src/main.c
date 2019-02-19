@@ -44,6 +44,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "printf.h"
+#include <stdlib.h>
 
 /* USER CODE END Includes */
 
@@ -59,7 +60,6 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -69,20 +69,18 @@ RTC_HandleTypeDef hrtc;
 
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_rx;
-DMA_HandleTypeDef hdma_usart1_tx;
 
 /* USER CODE BEGIN PV */
-
+uint8_t dma_rx_buffer[dma_rx_buffer_SIZE];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
-static void MX_USART1_UART_Init(void);
 static void MX_CRC_Init(void);
 static void MX_RTC_Init(void);
-static void MX_NVIC_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -121,13 +119,32 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_USART1_UART_Init();
   MX_CRC_Init();
   MX_RTC_Init();
-
-  /* Initialize interrupts */
-  MX_NVIC_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  //int status;
+  HAL_GPIO_WritePin(GPIOA, JOHN_RED_Pin, 1);
+  HAL_GPIO_WritePin(GPIOA, JOHN_GREEN_Pin, 1);
+  //printf("RESET");
+  __HAL_UART_FLUSH_DRREGISTER(&huart1);
+  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
+
+  // These functions trigger continious calls to USART1_IRQHandler. Unsure why?
+  // __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
+  // LL_USART_EnableIT_IDLE(huart1.Instance);
+  
+  HAL_UART_Receive_DMA(&huart1, dma_rx_buffer, SIZE(dma_rx_buffer));
+  //HAL_Delay(1000);
+
+  char szNumbers[] = "0x10,0x1000 0x100";
+  char * pEnd;
+  long int li1, li2, li3, li4;
+  li1 = strtol (szNumbers,&pEnd,16);
+  pEnd++;
+  li2 = strtol (pEnd,&pEnd,16);
+  printf ("The decimal equivalents are: %ld, %ld.\n", li1, li2);
+ 
 
   /* USER CODE END 2 */
 
@@ -135,16 +152,18 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    int ch;
 
+	//HAL_UART_Receive(&huart1, dma_rx_buffer, 1, 1);
+	// HAL_UART_DMAPause(&huart1);
+	// //printf("RESET");
+	// printf("Loop: ");
+	// for( int i=0;i<5;i++) printf("%c", dma_rx_buffer[i]);
+	// printf("\n");
+	// HAL_UART_DMAResume(&huart1);
+	HAL_Delay(500);
+  HAL_GPIO_WritePin(GPIOA, JOHN_GREEN_Pin, 1);
+  HAL_GPIO_WritePin(GPIOA, JOHN_RED_Pin, 1);
 
-    for( ch = 65 ; ch <= 90; ch++ ) {
-        printf("ASCII value = %d, Character = %c\n", ch , ch);
-        //HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
-	    HAL_Delay(1000);
-    }
-	//HAL_UART_Transmit(&huart1, (uint8_t *)&"A", 1, 0xFFFF);
-    //printf("B");
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -192,20 +211,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-}
-
-/**
-  * @brief NVIC Configuration.
-  * @retval None
-  */
-static void MX_NVIC_Init(void)
-{
-  /* DMA1_Channel2_3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
-  /* USART1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(USART1_IRQn);
 }
 
 /**
@@ -297,7 +302,7 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.WordLength = UART_WORDLENGTH_9B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_EVEN;
-  huart1.Init.Mode = UART_MODE_TX;
+  huart1.Init.Mode = UART_MODE_TX_RX;
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
@@ -320,6 +325,11 @@ static void MX_DMA_Init(void)
   /* DMA controller clock enable */
   __HAL_RCC_DMA1_CLK_ENABLE();
 
+  /* DMA interrupt init */
+  /* DMA1_Channel2_3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_3_IRQn);
+
 }
 
 /**
@@ -329,9 +339,20 @@ static void MX_DMA_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, JOHN_GREEN_Pin|JOHN_RED_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : JOHN_GREEN_Pin JOHN_RED_Pin */
+  GPIO_InitStruct.Pin = JOHN_GREEN_Pin|JOHN_RED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
@@ -339,7 +360,38 @@ static void MX_GPIO_Init(void)
 void _putchar(char character){
 	HAL_UART_Transmit(&huart1, (uint8_t *)&character, 1, 0xFFFF);
 }
-	
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+  // printf("CPL full\n");
+  // HAL_GPIO_WritePin(GPIOA, JOHN_RED_Pin, 0);
+  //HAL_Delay(200);
+  //__HAL_UART_FLUSH_DRREGISTER(&huart1);
+  //__HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
+  HAL_UART_Receive_DMA(&huart1, dma_rx_buffer, SIZE(dma_rx_buffer));
+}
+
+void HAL_UART_RxHalfCpltCallback (UART_HandleTypeDef *huart){
+  // printf("CPL half\n");
+  // HAL_GPIO_WritePin(GPIOA, JOHN_GREEN_Pin, 0);
+}
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
+
+
+  // printf("\n\n[ERROR] HAL_UART_ErrorCallback\n");
+  // printf("Error Code1: %x\n", huart->RxState);
+  // printf("Error Code2: %x\n", huart->gState);
+  // printf("Buffer RX Count: %x\n", huart->RxXferCount);
+  // printf("DMA ErrorCode: %x\n", hdma_usart1_rx.ErrorCode);
+  // printf("DMA State: %x\n", hdma_usart1_rx.State);
+
+  // __HAL_UART_FLUSH_DRREGISTER(&huart1);
+  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
+  HAL_UART_Receive_DMA(&huart1, dma_rx_buffer, SIZE(dma_rx_buffer));
+  HAL_GPIO_WritePin(GPIOA, JOHN_RED_Pin, 0);
+  //HardFault_Handler(); // Error forever right now. Just for debug!
+}
+
 
 /* USER CODE END 4 */
 
@@ -351,7 +403,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-
+  printf("ERROR!!!");
   /* USER CODE END Error_Handler_Debug */
 }
 

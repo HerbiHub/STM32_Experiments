@@ -52,7 +52,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+  
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -67,6 +67,7 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
+#define SIZE(x) sizeof(x)/sizeof(x[0])
 
 /* USER CODE END EM */
 
@@ -78,8 +79,12 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define JOHN_GREEN_Pin GPIO_PIN_2
+#define JOHN_GREEN_GPIO_Port GPIOA
+#define JOHN_RED_Pin GPIO_PIN_3
+#define JOHN_RED_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
-
+#define dma_rx_buffer_SIZE 200
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
