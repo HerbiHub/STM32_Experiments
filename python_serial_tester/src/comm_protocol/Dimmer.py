@@ -37,6 +37,7 @@ class Dimmer(CommBase):
             ret_str += f",{self.channel},{self.setting}"
         elif self.verb == 'SET':
             ret_str += f",{self.channel},{self.setting}"
+        ret_str += ","
         return ret_str
 
 

@@ -16,7 +16,7 @@ class Status(CommBase):
 
     
     def str_stub(self):
-        return f"{self.version},{self.destination},{self.source},STATUS,{self.status_code:0>3},{self.crc_old}"
+        return f"{self.version},{self.destination},{self.source},STATUS,{self.status_code:0>3},{self.crc_old},"
     
 
     def validate(self):

@@ -3,6 +3,7 @@
 import abc
 import string
 import zlib
+from ..crc32 import stm32_crc32
 
 class CommBase(abc.ABC):
 
@@ -11,19 +12,26 @@ class CommBase(abc.ABC):
         self.version = kwargs.get('version', 1)
         self.source = kwargs.get('source','0000')
         self.destination = kwargs.get('destination','0000')
-        self._crc = kwargs.get('crc',None)
+        if 'crc' in kwargs and kwargs['crc'] is not None:
+            self._crc = int(kwargs['crc'], 16)
+        else:
+            self._crc = None
 
 
     def __str__(self):
         if self._crc:
-            return f"{self.str_stub()},{self._crc}"
+            return f"{self.str_stub()}0x{self._crc:X}"
         else:
-            return f"{self.str_stub()},{self.crc}"
+            return f"{self.str_stub()}0x{self.crc:X}"
 
 
     @property
     def crc(self):
-        return hex(zlib.crc32(self.str_stub().encode('ASCII')) & 0xFFFFFFFF)
+        crc = 0xFFFFFFFF
+        for c in self.str_stub().encode('ASCII'):
+            crc = stm32_crc32(c, crc)
+        return crc
+        # return f"0x{(zlib.crc32(self.str_stub().encode('ASCII')) & 0xFFFFFFFF):X}"
 
 
     @abc.abstractmethod
@@ -55,7 +63,7 @@ class CommBase(abc.ABC):
 
         if self._crc is not None:
             if self._crc != self.crc:
-                raise ValueError(f"Invalid manual CRC: {self._crc} is not {self.crc}")
+                raise ValueError(f"Invalid manual CRC: 0x{self._crc:X} is not 0x{self.crc:X}")
 
 
 

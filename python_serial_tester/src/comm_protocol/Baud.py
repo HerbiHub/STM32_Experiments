@@ -22,6 +22,7 @@ class Baud(CommBase):
         ret_str = f"{self.version},{self.destination},{self.source},BAUD,{self.verb}"
         if self.verb in ["SET","SAY"]:
             ret_str += f",{self.baud}"
+        ret_str += ","
         return ret_str
 
     
