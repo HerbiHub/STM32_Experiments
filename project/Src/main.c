@@ -123,11 +123,12 @@ int main(void)
   MX_RTC_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  HAL_Delay(500);
   //int status;
   HAL_GPIO_WritePin(GPIOA, JOHN_RED_Pin, 1);
   HAL_GPIO_WritePin(GPIOA, JOHN_GREEN_Pin, 1);
   //printf("RESET");
-  __HAL_UART_FLUSH_DRREGISTER(&huart1);
+  // __HAL_UART_FLUSH_DRREGISTER(&huart1);
   __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
 
   // These functions trigger continious calls to USART1_IRQHandler. Unsure why?
@@ -137,13 +138,15 @@ int main(void)
   HAL_UART_Receive_DMA(&huart1, dma_rx_buffer, SIZE(dma_rx_buffer));
   //HAL_Delay(1000);
 
-  char szNumbers[] = "0x10,0x1000 0x100";
+  char szNumbers[] = "0x10\n0x1000 0x100";
   char * pEnd;
   long int li1, li2, li3, li4;
   li1 = strtol (szNumbers,&pEnd,16);
   pEnd++;
   li2 = strtol (pEnd,&pEnd,16);
   printf ("The decimal equivalents are: %ld, %ld.\n", li1, li2);
+
+  printf ("ID: 0x%08X%08X%08X\n", HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
  
 
   /* USER CODE END 2 */
@@ -307,7 +310,7 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
   huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_RS485Ex_Init(&huart1, UART_DE_POLARITY_HIGH, 0, 0) != HAL_OK)
+  if (HAL_RS485Ex_Init(&huart1, UART_DE_POLARITY_HIGH, 5, 5) != HAL_OK)
   {
     Error_Handler();
   }
@@ -367,7 +370,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
   //HAL_Delay(200);
   //__HAL_UART_FLUSH_DRREGISTER(&huart1);
   //__HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
-  HAL_UART_Receive_DMA(&huart1, dma_rx_buffer, SIZE(dma_rx_buffer));
+  //HAL_UART_Receive_DMA(&huart1, dma_rx_buffer, SIZE(dma_rx_buffer));
 }
 
 void HAL_UART_RxHalfCpltCallback (UART_HandleTypeDef *huart){

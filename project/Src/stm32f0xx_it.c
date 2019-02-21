@@ -192,7 +192,7 @@ void USART1_IRQHandler(void)
       old_ptr = (old_ptr + 1) % dma_rx_buffer_SIZE;
     }  while(old_ptr != buff_ptr);
     printf("\n");
-    printf("%x\n",huart1.RxXferCount);
+    printf("%i %i\n",dma_rx_buffer_SIZE - huart1.hdmarx->Instance->CNDTR, dma_rx_buffer[dma_rx_buffer_SIZE - huart1.hdmarx->Instance->CNDTR-1]);
   }
 
   buff_ptr = (buff_ptr + 1) % dma_rx_buffer_SIZE;

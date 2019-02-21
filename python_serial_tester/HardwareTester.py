@@ -23,7 +23,6 @@ for cmd_str in cmd_strings:
     print()
     x = Parser(cmd_str).iparse()
     x.validate()
-    print(cmd_str)
     print(x)
     ser.write((str(x)+"\n").encode("ASCII"))
     while 1:
