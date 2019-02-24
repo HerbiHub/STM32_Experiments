@@ -1,7 +1,7 @@
 
 import re
 
-from . import Baud, Dimmer, Status
+from . import Baud, Dimmer, Status, RTC
 
 class Parser:
 
@@ -67,7 +67,7 @@ class Parser:
             (?P<source>[a-zA-Z0-9]{4}),
             STATUS,
             (?P<status_code>[^,\n]+),
-            (?P<crc_old>0x[^,\n]+)
+            (?P<crc_old>0x[^,\n]+),
             (,(?P<crc>0x[^,\n]+))?
             """,
             self.string,
@@ -81,4 +81,36 @@ class Parser:
                           crc_old = d['crc_old'],
                           crc = d['crc'],
                           )
+
+        # RTC Code
+        regex_object = re.match(r"""
+            (?P<version>\d+),
+            (?P<destination>[a-zA-Z0-9]{4}),
+            (?P<source>[a-zA-Z0-9]{4}),
+            RTC,
+            (?P<verb>GET|SET|SAY|CLEAR)
+            (,(?P<year>[^,\n]+))?
+            (,(?P<month>[^,\n]+))?
+            (,(?P<day>[^,\n]+))?
+            (,(?P<hour>[^,\n]+))?
+            (,(?P<minute>[^,\n]+))?
+            (,(?P<second>[^,\n]+))?
+            (,(?P<crc>0x[^,\n]+))?
+            """,
+            self.string,
+            re.X)
+        if regex_object:
+            d = regex_object.groupdict()
+            return RTC(version = d['version'],
+                       destination = d['destination'],
+                       source = d['source'],
+                       verb = d['verb'],
+                       year = d['year'],
+                       month = d['month'],
+                       day = d['day'],
+                       hour = d['hour'],
+                       minute = d['minute'],
+                       second = d['second'],
+                       crc = d['crc'],
+                       )
 
