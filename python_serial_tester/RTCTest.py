@@ -34,8 +34,6 @@ while 1:
 
 
 cmd = RTC(verb='GET')
-cmd = Parser(cmd_str).iparse()
-cmd.validate()
 print(cmd)
 ser.write((str(cmd)+"\n").encode("ASCII"))
 while 1:
