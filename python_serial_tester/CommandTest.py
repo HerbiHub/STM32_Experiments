@@ -11,6 +11,7 @@ cmd_strings = [
     "1,SLAV,HOST,RTC,GET,0x17B1EA77",
     "1,HOST,SLAV,BAUD,SAY,9600,0xBA7CC691",
     "1,SLAV,HOST,BAUD,CLEAR,0x42D736CE",
+    "1,HOST,SLAV,RTC,SAY,0,0,0,0,0,0,0xA36E2DB2",
     ]
 
 for cmd_str in cmd_strings:

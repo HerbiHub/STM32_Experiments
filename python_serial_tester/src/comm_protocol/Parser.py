@@ -114,3 +114,4 @@ class Parser:
                        crc = d['crc'],
                        )
 
+        return self.string
