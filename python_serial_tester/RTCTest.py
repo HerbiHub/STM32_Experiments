@@ -15,6 +15,10 @@ ser = Serial('/dev/ttyUSB0', baudrate=9600, parity = serial.PARITY_EVEN, stopbit
 #ser = rs485.RS485('/dev/ttyUSB0', baudrate=9600, parity = serial.PARITY_EVEN)
 ser.timeout = 1
 
+#cmd = RTC(verb='GET')
+#print(cmd)
+#exit()
+
 now = datetime.datetime.now()
 start =  datetime.datetime.now()
 
@@ -33,12 +37,20 @@ while 1:
     ser.write((str(cmd)+"\n").encode("ASCII"))
     now = datetime.datetime.now().replace(microsecond=0)
     t0 = time.time()
-    data = ser.read(200)
+    try:
+        data = ser.read(200)
+    except:
+        time.sleep(0.5)
+        continue
     t1 = time.time()
     print(t1-t0)
+    print(now)
     for line in data.split(b'\n'):
-        response = Parser(line.decode('UTF-8')).iparse()
-        print("Line:", line)
+        try:
+            response = Parser(line.decode('UTF-8')).iparse()
+        except:
+            print(line)
+        #print("Line:", line)
         print(response)
     time.sleep(1)
 
